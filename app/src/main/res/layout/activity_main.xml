@@ -116,7 +116,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:src='@drawable/wrong_background'
-        android:visibility="invisible"
+        android:visibility="visible"
         />
 
 
