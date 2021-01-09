@@ -23,7 +23,6 @@
                 android:name="com.google.mlkit.vision.DEPENDENCIES"
                 android:value="ica" />
             <!-- To use multiple models: android:value="ica,model2,model3" -->
-
         </activity>
 
         <uses-library
