@@ -5,6 +5,7 @@
     android:id="@+id/relativeLayout4"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F1F1F1"
     tools:context=".MainActivity">
 
     <Button
@@ -17,17 +18,28 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-
     <com.wonderkiln.camerakit.CameraView
         android:id="@+id/camera_view"
-        android:layout_width="match_parent"
-        android:layout_height="429dp"
-        android:layout_marginBottom="195dp"
+        android:layout_width="318.7dp"
+        android:layout_height="473.7dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_detect"
-        app:layout_constraintStart_toStartOf="parent">
-
-
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/correct_imageView"
+        app:layout_constraintVertical_bias="0.07">
     </com.wonderkiln.camerakit.CameraView>
+
+
+    <ImageView
+        android:id="@+id/camera_view_mask"
+        android:layout_width="319dp"
+        android:layout_height="474dp"
+        android:src='@drawable/frame'
+        app:layout_constraintBottom_toTopOf="@+id/btn_detect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/correct_imageView"
+        app:layout_constraintVertical_bias="0.07" />
 
 
     <!-- Image View has to be bellow CameraView. For order of rendering. -->
@@ -95,8 +107,6 @@
 
 
 
-
-
     <ImageView
         android:id="@+id/correct_background_imageView"
         android:layout_width="match_parent"
@@ -116,7 +126,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:src='@drawable/wrong_background'
-        android:visibility="visible"
+        android:visibility="invisible"
         />
 
 
