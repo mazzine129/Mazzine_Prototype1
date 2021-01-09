@@ -158,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
         current_label_id = random.nextInt(label_array.size());   //change label id
         label_textView.setText(label_array.get(current_label_id));
 
-
         waitingDialog = new SpotsDialog.Builder()
                 .setContext(this)
                 .setMessage("Gae San joong")
