@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> label_array_kor = new ArrayList<String>();
     Random random;
 
+
     int BUTTON_STATUS = 0;
     int current_label_id;
     int WRONG_COUNT = 0;
@@ -293,12 +294,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if(WRONG_COUNT == 4){
-                    find_textView.setText(wrong_text_str);
-                    label_textView.setText("We will give tou a new word");
-                    wrong_imageView.setVisibility(View.VISIBLE);
-                    WRONG_COUNT = 0;
-                    BUTTON_STATUS = 1;
-                    btnDetect.setImageResource(R.drawable.shutter_button);
+                find_textView.setText(wrong_text_str);
+                label_textView.setText("We will give tou a new word");
+                wrong_imageView.setVisibility(View.VISIBLE);
+                WRONG_COUNT = 0;
+                BUTTON_STATUS = 1;
+                btnDetect.setImageResource(R.drawable.shutter_button);
             }else{
                 find_textView.setText(wrong_text_str);
 
