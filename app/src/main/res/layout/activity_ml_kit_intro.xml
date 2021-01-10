@@ -10,70 +10,74 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="91dp"
+        android:layout_height="80dp"
         android:src="@drawable/mz"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/layout1"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imageView"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView">
-
-        <ImageView
-            android:id="@+id/imageView9"
-            android:layout_width="230dp"
-            android:layout_height="54dp"
-            android:layout_gravity="center"
-            android:src="@drawable/walk_dic" />
-<!--
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="318dp"
-            android:layout_height="130dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ml_kit" />
-
-        <ImageView
-            android:id="@+id/imageView8"
-            android:layout_width="318dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center"
-            android:src="@drawable/walking_dic_bar" />
-
-        <ImageView
-            android:id="@+id/imageView6"
-            android:layout_width="318dp"
-            android:layout_height="250dp"
-            android:layout_gravity="center"
-            android:src="@drawable/my_vocab_box" />
--->
-        <ImageView
-            android:id="@+id/play_button"
-            android:layout_width="76dp"
-            android:layout_height="80dp"
-            android:src="@drawable/play_button"
-            android:layout_gravity="center"
-            />
-
-    </LinearLayout>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:itemBackground="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/main_menu" />
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:id="@+id/layout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/imageView9"
+                android:layout_width="230dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:src="@drawable/walk_dic" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="285dp"
+                android:layout_height="170dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ml_kit" />
+
+            <ImageView
+                android:id="@+id/imageView8"
+                android:layout_width="285dp"
+                android:layout_height="55dp"
+                android:layout_gravity="center"
+                android:src="@drawable/walking_dic_bar" />
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="285dp"
+                android:layout_height="245dp"
+                android:layout_gravity="center"
+                android:src="@drawable/my_vocab_box" />
+
+            <ImageView
+                android:id="@+id/play_button"
+                android:layout_width="75dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/play_button" />
+
+            <ImageView
+                android:id="@+id/play_button1"
+                android:layout_width="75dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                />
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,19 +11,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FirebaseImageLabeling">
-        <activity android:name=".ml_kit_intro">
+        <activity android:name=".Home"></activity>
+        <activity android:name=".MainPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ml_kit_intro" />
         <activity android:name=".MainActivity">
             <meta-data
                 android:name="com.google.mlkit.vision.DEPENDENCIES"
                 android:value="ica" />
             <!-- To use multiple models: android:value="ica,model2,model3" -->
-
 
         </activity>
 

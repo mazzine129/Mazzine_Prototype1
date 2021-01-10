@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> label_array_kor = new ArrayList<String>();
     Random random;
 
-
     int BUTTON_STATUS = 0;
     int current_label_id;
     int WRONG_COUNT = 0;
