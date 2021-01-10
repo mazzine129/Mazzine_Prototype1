@@ -45,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
 
     CameraView cameraView;
-    Button btnDetect;
+    ImageView btnDetect;
     AlertDialog waitingDialog;
     TextView label_textView, korean_textView, find_textView;
     ImageView correct_imageView, correct_background_imageView, wrong_imageView, wrong_background_imageView;
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
         random = new Random();
 
         cameraView = (CameraView) findViewById(R.id.camera_view);
-        btnDetect = (Button) findViewById(R.id.btn_detect);
+        btnDetect = (ImageView) findViewById(R.id.btn_detect);
         label_textView = (TextView) findViewById(R.id.result_text);
         korean_textView = (TextView) findViewById(R.id.korean_text);
         find_textView = (TextView) findViewById(R.id.find_text);
@@ -180,9 +180,12 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap bitmap = cameraKitImage.getBitmap();
                 bitmap = Bitmap.createScaledBitmap(bitmap,cameraView.getWidth(),cameraView.getHeight(),false);
                 //cameraView.stop(); -- black out error
+                //cameraView.setKeepScreenOn();
+
 
                 // Pass on Image for Firebase MLKit
                 runDetector(bitmap);
+                cameraView.start();
             }
 
             @Override
@@ -200,8 +203,8 @@ public class MainActivity extends AppCompatActivity {
                 correct_background_imageView.setVisibility(View.INVISIBLE);
                 // CAPTURE
                 if(BUTTON_STATUS == 0) {
-                    cameraView.start();
                     cameraView.captureImage();
+                    // cameraView.stop();
                 }
                 // NEXT WORD.
                 // Select vocab - random from array
@@ -296,8 +299,7 @@ public class MainActivity extends AppCompatActivity {
                     wrong_imageView.setVisibility(View.VISIBLE);
                     WRONG_COUNT = 0;
                     BUTTON_STATUS = 1;
-                    btnDetect.setText("Next Word");
-
+                    btnDetect.setImageResource(R.drawable.shutter_button);
             }else{
                 find_textView.setText(wrong_text_str);
 
@@ -322,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
 
             // button - NEW WORD
             BUTTON_STATUS = 1;
-            btnDetect.setText("Next Word");
+            btnDetect.setImageResource(R.drawable.next_word);
         }
 
         if(waitingDialog.isShowing())
@@ -337,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
         label_textView.setText(label_array.get(current_label_id));     // change target text for user
         BUTTON_STATUS = 0;
         korean_textView.setVisibility(View.INVISIBLE);
-        btnDetect.setText("Detect");
+        btnDetect.setImageResource(R.drawable.shutter_button);
     }
 
 }
