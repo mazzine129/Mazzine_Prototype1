@@ -63,19 +63,26 @@ public class homeFragment extends Fragment {
         mediaContents = new ArrayList<>();
 
         for (int i = 0; i < numberOfItems; i++) {
-            MediaContent content = new MediaContent(mediaContainerLogos[i], mediaContainerLogoNames[i]);
+            MediaContent content = new MediaContent(mediaContainerLogos[i], mediaContainerLogoNames[i], "some_key");
             mediaContents.add(content);
+
         }
 
         // Design Layout
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()
+        /*LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity()
+                , LinearLayoutManager.HORIZONTAL
+                , false);*/
+        mediaContainer = view.findViewById(R.id.media_contents);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext()
                 , LinearLayoutManager.HORIZONTAL
                 , false);
+
         mediaContainer.setLayoutManager(layoutManager);
+
         mediaContainer.setItemAnimator(new DefaultItemAnimator());
 
         // Instatiate MediaContentAdapter
-        mediaContentAdapter = new com.example.firebaseimagelabeling.MediaContentAdapter(getActivity(), mediaContents);
+        mediaContentAdapter = new com.example.firebaseimagelabeling.MediaContentAdapter(view.getContext(), mediaContents);
 
         // Set Media Container RecyclerView
         mediaContainer.setAdapter(mediaContentAdapter);
@@ -88,6 +95,7 @@ public class homeFragment extends Fragment {
         playgroundImages.add(R.drawable.playground_logo3);
         playgroundImages.add(R.drawable.playground_logo4);
 
+        playground = view.findViewById(R.id.playground);
         PlaygroundAdapter playgroundAdapter = new PlaygroundAdapter();
         playground.setAdapter(playgroundAdapter);
 

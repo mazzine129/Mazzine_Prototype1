@@ -1,6 +1,7 @@
 package com.example.firebaseimagelabeling;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +42,12 @@ public class MediaContentAdapter extends RecyclerView.Adapter<MediaContentAdapte
         holder.imageView.setImageResource(mediaContents.get(position).getContentLogo());
         // Set text to TextView
         holder.textView.setText(mediaContents.get(position).getContentName());
+
+        holder.imageView.setOnClickListener((view -> {
+            Intent intent = new Intent(context, MediaActivity.class);
+            intent.putExtra("YOUTUBE_KEY", mediaContents.get(position).getContentKey());
+            context.startActivity(intent);
+        }));
     }
 
     @Override
@@ -57,5 +64,6 @@ public class MediaContentAdapter extends RecyclerView.Adapter<MediaContentAdapte
             imageView = (ImageView) itemView.findViewById(R.id.content_image);
             textView = (TextView) itemView.findViewById(R.id.content_name);
         }
+
     }
 }

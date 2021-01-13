@@ -34,7 +34,7 @@ public class Home extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
 
         mediaContainer = findViewById(R.id.media_contents);
 
@@ -52,12 +52,18 @@ public class Home extends AppCompatActivity {
                 , "Burger King"
                 , "McDonald's"};
 
+        String[] youtubeKeys = {"key1"
+                , "key2"
+                , "key3"
+                , "key4"
+                , "key5"};
+
         int numberOfItems = mediaContainerLogoNames.length;
         // Instantiation of media content objects
         mediaContents = new ArrayList<>();
 
         for (int i = 0; i < numberOfItems; i++) {
-            MediaContent content = new MediaContent(mediaContainerLogos[i], mediaContainerLogoNames[i]);
+            MediaContent content = new MediaContent(mediaContainerLogos[i], mediaContainerLogoNames[i], youtubeKeys[i]);
             mediaContents.add(content);
         }
 
