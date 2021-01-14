@@ -2,9 +2,11 @@ package com.example.firebaseimagelabeling;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.app.AlertDialog;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
@@ -33,6 +35,7 @@ import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraKitVideo;
 import com.wonderkiln.camerakit.CameraView;
 
+import java.lang.invoke.WrongMethodTypeException;
 import java.sql.Time;
 import java.util.List;
 
@@ -48,14 +51,16 @@ public class MainActivity extends AppCompatActivity {
     ImageView btnDetect;
     AlertDialog waitingDialog;
     TextView label_textView, korean_textView, find_textView;
-    ImageView correct_imageView, correct_background_imageView, wrong_imageView, wrong_background_imageView;
+    ImageView correct_imageView, correct_background_imageView, wrong_imageView, wrong_background_imageView, sound_button_imageView;
     ArrayList<String> label_array = new ArrayList<String>();
     ArrayList<String> label_array_kor = new ArrayList<String>();
     Random random;
 
+
     int BUTTON_STATUS = 0;
     int current_label_id;
     int WRONG_COUNT = 0;
+    int consecutive_correct = 0;
 
     @Override
     protected void onResume(){
@@ -152,14 +157,14 @@ public class MainActivity extends AppCompatActivity {
         correct_background_imageView= (ImageView) findViewById(R.id.correct_background_imageView);
         wrong_imageView = (ImageView) findViewById(R.id.wrong_imageView );
         wrong_background_imageView= (ImageView) findViewById(R.id.wrong_background_imageView);
-
+        sound_button_imageView = (ImageView) findViewById(R.id.sound_button);
 
         current_label_id = random.nextInt(label_array.size());   //change label id
         label_textView.setText(label_array.get(current_label_id));
 
         waitingDialog = new SpotsDialog.Builder()
                 .setContext(this)
-                .setMessage("Gae San joong")
+                .setMessage("로딩중")
                 .setCancelable(false).build();
 
         cameraView.addCameraKitListener(new CameraKitEventListener() {
@@ -183,8 +188,9 @@ public class MainActivity extends AppCompatActivity {
 
 
                 // Pass on Image for Firebase MLKit
+                cameraView.stop();
                 runDetector(bitmap);
-                cameraView.start();
+                //cameraView.start();
             }
 
             @Override
@@ -203,13 +209,23 @@ public class MainActivity extends AppCompatActivity {
                 // CAPTURE
                 if(BUTTON_STATUS == 0) {
                     cameraView.captureImage();
-                    // cameraView.stop();
+                    cameraView.start();
                 }
                 // NEXT WORD.
                 // Select vocab - random from array
                 // TODO: use stack or queue to minimize repetition
+                // correct, next word status
                 if(BUTTON_STATUS == 1) {
+
+
                     showNewWord();
+                    cameraView.start();
+                }
+                // retry status
+                if(BUTTON_STATUS == 2){
+
+                    showRetryWord();
+                    cameraView.start();
                 }
             }
 
@@ -271,8 +287,6 @@ public class MainActivity extends AppCompatActivity {
             }
             // TODO: Erase
             else if(label.getLabel().equals("Bird")){
-                // correct_imageView.setVisibility(View.VISIBLE);
-                // correct_background_imageView.setVisibility(View.VISIBLE);
                 wrong_flag = false;
                 confidence = label.getConfidence();
                 break;
@@ -286,37 +300,51 @@ public class MainActivity extends AppCompatActivity {
             WRONG_COUNT += 1;
             if(!firebaseVisionCloudLabels.isEmpty()) {
                 FirebaseVisionLabel label = firebaseVisionCloudLabels.get(0);
-                wrong_text_str = "Are you sure it is not " + label.getLabel();
+                wrong_text_str = "혹시 " + label.getLabel() + " 아니에요?";
 
             }else{
-                wrong_text_str = "AI cannot Detect!";
+                wrong_text_str = "키트가 모르는 물건이에요.";
             }
 
-            if(WRONG_COUNT == 4){
-                    find_textView.setText(wrong_text_str);
-                    label_textView.setText("We will give tou a new word");
-                    wrong_imageView.setVisibility(View.VISIBLE);
-                    WRONG_COUNT = 0;
-                    BUTTON_STATUS = 1;
-                    btnDetect.setImageResource(R.drawable.shutter_button);
+
+            if(WRONG_COUNT == 3){
+                find_textView.setText(wrong_text_str);
+                sound_button_imageView.setVisibility(View.INVISIBLE);
+
+                Typeface typeface = ResourcesCompat.getFont(this, R.font.yanolja_bold);
+                label_textView.setTypeface(typeface);
+
+                label_textView.setText("다른 단어를 찾아 볼까요?");
+
+                wrong_imageView.setImageResource(R.drawable.wrong);
+                wrong_imageView.setVisibility(View.VISIBLE);
+                consecutive_correct = 0;
+                WRONG_COUNT = 0;
+                BUTTON_STATUS = 1;
+                btnDetect.setImageResource(R.drawable.next_word);
             }else{
                 find_textView.setText(wrong_text_str);
 
                 // please find "   "
-                label_textView.setText("Try Again: " + label_array.get(current_label_id));
+                label_textView.setText(label_array.get(current_label_id));
+                wrong_imageView.setImageResource(R.drawable.wrong);
                 wrong_imageView.setVisibility(View.VISIBLE);
+                btnDetect.setImageResource(R.drawable.retry_button);
+                BUTTON_STATUS = 2;
             }
 
 
             // wrong_background_imageView.setVisibility(View.VISIBLE);
         }else{
             // confidence
-            find_textView.setText("Correct w/ confidence level: " + confidence);
+            WRONG_COUNT = 0;
+            consecutive_correct += 1;
+            find_textView.setText(consecutive_correct +"문제 연속 정답!");
 
             // correct LABEL
             label_textView.setText(label_array.get(current_label_id));
-            correct_imageView.setVisibility(View.VISIBLE);
-
+            wrong_imageView.setImageResource(R.drawable.correct);
+            wrong_imageView.setVisibility(View.VISIBLE);
             // show korean
             korean_textView.setText(label_array_kor.get(current_label_id));
             korean_textView.setVisibility(View.VISIBLE);
@@ -331,14 +359,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showNewWord(){
+
         find_textView.setText("Find");
         label_array_kor.remove(current_label_id); // remove current label from vocab
         label_array.remove(current_label_id); // remove current label from vocab
         current_label_id = random.nextInt(label_array.size());     // change label id randomly, globally
+        Typeface typeface = ResourcesCompat.getFont(this, R.font.temeraire_bold);
+        label_textView.setTypeface(typeface);
         label_textView.setText(label_array.get(current_label_id));     // change target text for user
         BUTTON_STATUS = 0;
         korean_textView.setVisibility(View.INVISIBLE);
         btnDetect.setImageResource(R.drawable.shutter_button);
-    }
+        sound_button_imageView.setVisibility(View.VISIBLE);
 
+    }
+    public void showRetryWord(){
+        find_textView.setText("Find");
+        label_textView.setText(label_array.get(current_label_id));     // change target text for user
+        BUTTON_STATUS = 0;
+        korean_textView.setVisibility(View.INVISIBLE);
+        btnDetect.setImageResource(R.drawable.shutter_button);
+        sound_button_imageView.setVisibility(View.VISIBLE);
+
+    }
 }

@@ -26,6 +26,8 @@ public class MainPage extends AppCompatActivity implements BottomNavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
+        loadFragment(new homeFragment());
+
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
@@ -36,8 +38,7 @@ public class MainPage extends AppCompatActivity implements BottomNavigationView.
 
         switch (item.getItemId()){
             case R.id.menu_home:
-                //fragment = new homeFragment();
-                startActivity(new Intent(MainPage.this, Home.class));
+                fragment = new homeFragment();
                 break;
 
             case R.id.menu_my_kit:
