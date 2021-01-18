@@ -23,9 +23,9 @@
         <activity android:name=".ml_kit_intro" />
         <activity android:name=".MainActivity">
             <meta-data
-                android:name="com.google.mlkit.vision.DEPENDENCIES"
-                android:value="ica" />
-            <!-- To use multiple models: android:value="ica,model2,model3" -->
+                android:name="com.google.firebase.ml.vision.DEPENDENCIES"
+                android:value="label" />
+            <!-- To use multiple models: android:value="label,model2,model3" -->
 
         </activity>
 

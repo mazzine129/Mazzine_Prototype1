@@ -19,15 +19,11 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.ml.vision.FirebaseVision;
-import com.google.firebase.ml.vision.cloud.FirebaseVisionCloudDetectorOptions;
-import com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabel;
-import com.google.firebase.ml.vision.cloud.label.FirebaseVisionCloudLabelDetector;
-import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.google.firebase.ml.vision.label.FirebaseVisionLabel;
-import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetector;
-import com.google.firebase.ml.vision.label.FirebaseVisionLabelDetectorOptions;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.label.ImageLabel;
+import com.google.mlkit.vision.label.ImageLabeler;
+import com.google.mlkit.vision.label.ImageLabeling;
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions;
 import com.wonderkiln.camerakit.CameraKitError;
 import com.wonderkiln.camerakit.CameraKitEvent;
 import com.wonderkiln.camerakit.CameraKitEventListener;
@@ -236,21 +232,21 @@ public class MainActivity extends AppCompatActivity {
     private void runDetector(Bitmap bitmap) {
         Log.d("EDMTERROR","here2");
 
-        FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(bitmap);
+        InputImage image = InputImage.fromBitmap(bitmap, 0);
 
-        FirebaseVisionLabelDetectorOptions options =
-                new FirebaseVisionLabelDetectorOptions.Builder()
-                        .setConfidenceThreshold(0.6f) // confidence 0.8 original
-                        .build();
 
-        FirebaseVisionLabelDetector detector =
-                FirebaseVision.getInstance().getVisionLabelDetector(options);
+        ImageLabelerOptions options = new ImageLabelerOptions.Builder()
+            .setConfidenceThreshold(0.7f)
+            .build();
 
-        detector.detectInImage(image)
-                .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionLabel>>() {
+        ImageLabeler labeler = ImageLabeling.getClient(options);
+
+
+        labeler.process(image)
+                .addOnSuccessListener(new OnSuccessListener<List<ImageLabel>>() {
                     @Override
-                    public void onSuccess(List<FirebaseVisionLabel> firebaseVisionLabels) {
-                        processDataResult(firebaseVisionLabels);
+                    public void onSuccess(List<ImageLabel>  labels) {
+                        processDataResult(labels);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -259,17 +255,12 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("EDMTERROR",e.getMessage());
                     }
                 });
+
     }
 
-    private void processDataResultCloud(List<FirebaseVisionCloudLabel> firebaseVisionCloudLabels) {
-        for(FirebaseVisionCloudLabel label : firebaseVisionCloudLabels){
-            Toast.makeText(this, "Cloud result :" + label.getLabel(), Toast.LENGTH_SHORT).show();
-        }
-        if(waitingDialog.isShowing())
-            waitingDialog.dismiss();
-    }
 
-    private void processDataResult(List<FirebaseVisionLabel> firebaseVisionCloudLabels) {
+
+    private void processDataResult(List<ImageLabel> firebaseVisionCloudLabels) {
 /*        for(FirebaseVisionLabel label : firebaseVisionCloudLabels) {
             Toast.makeText(this, "On-device result :" + label.getLabel(), Toast.LENGTH_SHORT).show();
             Log.d("Labeling tags", label.getLabel() + " " + label.getConfidence());
@@ -278,20 +269,20 @@ public class MainActivity extends AppCompatActivity {
         float confidence = 0.0f;
         boolean wrong_flag = true;
 
-        for(FirebaseVisionLabel label : firebaseVisionCloudLabels) {
+        for(ImageLabel label : firebaseVisionCloudLabels) {
 
-            if(label.getLabel().equals(label_array.get(current_label_id))){
+            if(label.getText().equals(label_array.get(current_label_id))){
                 wrong_flag = false;
                 confidence = label.getConfidence();
                 break;
             }
             // TODO: Erase
-            else if(label.getLabel().equals("Bird")){
+            else if(label.getText().equals("Bird")){
                 wrong_flag = false;
                 confidence = label.getConfidence();
                 break;
             }
-            Log.d("Labeling tags", label.getLabel() + " " + label.getConfidence());
+            Log.d("Labeling tags", label.getText() + " " + label.getConfidence());
         }
 
         String wrong_text_str;
@@ -299,8 +290,8 @@ public class MainActivity extends AppCompatActivity {
         if(wrong_flag){
             WRONG_COUNT += 1;
             if(!firebaseVisionCloudLabels.isEmpty()) {
-                FirebaseVisionLabel label = firebaseVisionCloudLabels.get(0);
-                wrong_text_str = "혹시 " + label.getLabel() + " 아니에요?";
+                ImageLabel label = firebaseVisionCloudLabels.get(0);
+                wrong_text_str = "혹시 " + label.getText() + " 아니에요?";
 
             }else{
                 wrong_text_str = "키트가 모르는 물건이에요.";
